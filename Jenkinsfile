@@ -16,7 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image for branch: ${env.BRANCH_NAME}"
-                sh "docker build -t ${IMAGE_NAME}:${env.BRANCH_NAME} ."
+                bat "docker build -t %IMAGE_NAME%:%BRANCH_NAME% ."
             }
         }
 
@@ -24,19 +24,19 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh '''
-                        docker stop angular-staging || true
-                        docker rm angular-staging || true
+                        bat """
+                        docker stop angular-staging || exit 0
+                        docker rm angular-staging || exit 0
                         docker run -d -p 4200:80 --name angular-staging angular-app:main
-                        '''
+                        """
                     }
 
                     if (env.BRANCH_NAME == 'master') {
-                        sh '''
-                        docker stop angular-prod || true
-                        docker rm angular-prod || true
+                        bat """
+                        docker stop angular-prod || exit 0
+                        docker rm angular-prod || exit 0
                         docker run -d -p 80:80 --name angular-prod angular-app:master
-                        '''
+                        """
                     }
                 }
             }
