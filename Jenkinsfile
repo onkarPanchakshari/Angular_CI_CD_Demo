@@ -24,6 +24,7 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'main') {
                         bat """
+                        docker stop angular-main || exit 0
                         docker rm -f angular-main || exit 0
                         docker run -d -p 4200:80 --name angular-main %IMAGE_NAME%:main
                         """
@@ -31,6 +32,7 @@ pipeline {
 
                     if (env.BRANCH_NAME == 'master') {
                         bat """
+                        docker stop angular-master || exit 0
                         docker rm -f angular-master || exit 0
                         docker run -d -p 4300:80 --name angular-master %IMAGE_NAME%:master
                         """
